@@ -1,13 +1,33 @@
-import React from 'react';
-import hero from '../assets/Ilam.jpg';
-import Package1 from '../assets/package1.jpg'; // Sample images
+import React, { useState, useEffect } from 'react';
+import hero1 from '../assets/Ilam.jpg';
+import hero2 from '../assets/Lhotse.jpg';
+import hero3 from '../assets/Bardiya.jpg';
+import Package1 from '../assets/package1.jpg';
 import Package2 from '../assets/package2.jpg';
 import Package3 from '../assets/package3.jpg';
 
+const images = [hero1, hero2, hero3];
+
 const LandingPage = () => {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  // Auto-slide effect (every 3 seconds)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % images.length);
+    }, 3000); // Change every 3 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${hero})` }}>
-      {/* Overlay to make text readable */}
+    <div className="relative min-h-screen">
+      {/* Slideshow Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
+        style={{ backgroundImage: `url(${images[currentImage]})` }}
+      ></div>
+      
+      {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
       {/* Navbar */}
@@ -22,7 +42,7 @@ const LandingPage = () => {
         </div>
       </header>
 
-      {/* Hero Section with two sections inside */}
+      {/* Hero Section */}
       <main className="relative z-10 flex min-h-screen items-center px-10">
         {/* Left Side - Welcome & Signup */}
         <div className="w-1/2 text-white p-10">
@@ -41,11 +61,10 @@ const LandingPage = () => {
         </div>
 
         {/* Right Side - Featured Packages */}
-        <div className="w-1/2 bg-white bg-opacity-90 p-8 rounded-lg shadow-lg">
+        <div className="w-1/2 bg-white bg-opacity-30 p-8 rounded-lg shadow-lg">
           <h3 className="text-3xl font-bold text-gray-800 text-center mb-6">Featured Travel Packages</h3>
           <div className="space-y-4">
-            {/* Package 1 */}
-            <div className="flex items-center bg-gray-100 p-4 rounded-lg shadow">
+            <div className="flex items-center bg-gray-100 bg-opacity-50 p-4 rounded-lg shadow">
               <img src={Package1} alt="Beach Getaway" className="w-24 h-24 rounded-lg object-cover mr-4" />
               <div>
                 <h4 className="text-lg font-semibold">Beach Getaway</h4>
@@ -53,8 +72,7 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Package 2 */}
-            <div className="flex items-center bg-gray-100 p-4 rounded-lg shadow">
+            <div className="flex items-center bg-gray-100 bg-opacity-50 p-4 rounded-lg shadow">
               <img src={Package2} alt="Mountain Adventure" className="w-24 h-24 rounded-lg object-cover mr-4" />
               <div>
                 <h4 className="text-lg font-semibold">Mountain Adventure</h4>
@@ -62,8 +80,7 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Package 3 */}
-            <div className="flex items-center bg-gray-100 p-4 rounded-lg shadow">
+            <div className="flex items-center bg-gray-100 bg-opacity-50 p-4 rounded-lg shadow">
               <img src={Package3} alt="City Explorer" className="w-24 h-24 rounded-lg object-cover mr-4" />
               <div>
                 <h4 className="text-lg font-semibold">City Explorer</h4>
