@@ -1,56 +1,54 @@
-const { hashPassword, comparePassword, generateToken } = require('../Utils/authUtils.js');
+const db = require('../config/db');
+const bcrypt = require('bcryptjs');
+const generateToken = require('../Utils/generateToken');
 
-let users = [];
-
-const registerUser = async (req, res) => {
+// User Signup
+exports.signup = async (req, res) => {
   const { email, password } = req.body;
 
-  const existingUser = users.find((user) => user.email === email);
-  if (existingUser) {
-    return res.status(400).json({ message: 'User already exists' });
+  try {
+    // Check if email already exists
+    const checkUser = 'SELECT * FROM users WHERE email = ?';
+    db.query(checkUser, [email], async (err, results) => {
+      if (results.length > 0) {
+        return res.status(400).json({ message: 'Email already registered' });
+      }
+
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insert user into database
+      const insertUser = 'INSERT INTO users (email, password) VALUES (?, ?)';
+      db.query(insertUser, [email, hashedPassword], (err, result) => {
+        if (err) return res.status(500).json({ message: 'Server error' });
+
+        res.status(201).json({ message: 'User registered successfully' });
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
   }
-
-  const hashedPassword = await hashPassword(password);
-
-  const newUser = { email, password: hashedPassword };
-  users.push(newUser);
-
-  const token = generateToken(newUser);
-
-  return res.status(201).json({ message: 'User registered successfully', token });
 };
 
-const loginUser = async (req, res) => {
+// User Login
+exports.login = (req, res) => {
   const { email, password } = req.body;
 
-  const user = users.find((user) => user.email === email);
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
+  const getUser = 'SELECT * FROM users WHERE email = ?';
+  db.query(getUser, [email], async (err, results) => {
+    if (results.length === 0) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
-  const isPasswordCorrect = await comparePassword(password, user.password);
-  if (!isPasswordCorrect) {
-    return res.status(400).json({ message: 'Invalid credentials' });
-  }
+    const user = results[0];
+    const isMatch = await bcrypt.compare(password, user.password);
 
-  const token = generateToken(user);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
-  return res.status(200).json({ message: 'Login successful', token });
+    const token = generateToken(user.id);
+
+    res.json({ token, message: 'Login successful' });
+  });
 };
-
-const protectedRoute = (req, res) => {
-  const token = req.header('Authorization');
-
-  if (!token) {
-    return res.status(403).json({ message: 'Access denied. No token provided.' });
-  }
-
-  const decoded = verifyToken(token);
-  if (!decoded) {
-    return res.status(400).json({ message: 'Invalid token' });
-  }
-
-  res.json({ message: 'Protected content', user: decoded });
-};
-
-module.exports = { registerUser, loginUser, protectedRoute };

@@ -31,13 +31,12 @@ const LandingPage = () => {
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
       {/* Navbar */}
-      <header className="absolute top-0 left-0 right-0 bg-blue-600 text-white py-4 z-10">
-        <div className="container mx-auto flex justify-between items-center px-4">
+      <header className="absolute top-0 left-0 right-0  text-white py-4 z-10">
+        <div className="container mx-auto flex justify-between items-center px-9 py-4">
           <h1 className="text-2xl font-bold">TravelTorch</h1>
           <nav className="space-x-6 flex">
             <a href="/destinations" className="hover:text-blue-300">Destinations</a>
             <a href="/travhome" className="hover:text-blue-300">Travel Packages</a>
-            <a href="/signup" className="hover:text-blue-300">Sign Up</a>
           </nav>
         </div>
       </header>
@@ -77,6 +76,7 @@ const LandingPage = () => {
               <div>
                 <h4 className="text-lg font-semibold">Mountain Adventure</h4>
                 <p className="text-gray-600 text-sm">Experience thrilling hikes and breathtaking views.</p>
+
               </div>
             </div>
 
