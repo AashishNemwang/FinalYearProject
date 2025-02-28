@@ -11,11 +11,11 @@ const images = [hero1, hero2, hero3];
 const LandingPage = () => {
   const [currentImage, setCurrentImage] = useState(0);
 
-  // Auto-slide effect (every 3 seconds)
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 3000); // Change every 3 seconds
+    }, 3000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -31,7 +31,7 @@ const LandingPage = () => {
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
       {/* Navbar */}
-      <header className="absolute top-0 left-0 right-0  text-white py-4 z-10">
+      <header className="absolute bg-black bg-opacity-60 top-0 left-0 right-0  text-white py-2">
         <div className="container mx-auto flex justify-between items-center px-9 py-4">
           <h1 className="text-2xl font-bold">TravelTorch</h1>
           <nav className="space-x-6 flex">
@@ -50,10 +50,10 @@ const LandingPage = () => {
             Are you a traveler looking for exciting travel packages? Or are you an agency ready to showcase amazing destinations? Select your role to get started.
           </p>
           <div className="flex flex-col md:flex-row gap-6">
-            <a href="/travhome" className="bg-blue-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-600 transition">
+            <a href="/travhome" className="bg-gray-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-700 transition">
               I’m a Traveler
             </a>
-            <a href="/signup" className="bg-green-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-600 transition">
+            <a href="/login" className="bg-gray-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-700 transition">
               I’m a Travel Agency
             </a>
           </div>
@@ -61,12 +61,12 @@ const LandingPage = () => {
 
         {/* Right Side - Featured Packages */}
         <div className="w-1/2 bg-white bg-opacity-30 p-8 rounded-lg shadow-lg">
-          <h3 className="text-3xl font-bold text-gray-800 text-center mb-6">Featured Travel Packages</h3>
+          <h3 className="text-3xl font-bold text-gray-800 text-center mb-6">Explore your imagination</h3>
           <div className="space-y-4">
             <div className="flex items-center bg-gray-100 bg-opacity-50 p-4 rounded-lg shadow">
               <img src={Package1} alt="Beach Getaway" className="w-24 h-24 rounded-lg object-cover mr-4" />
               <div>
-                <h4 className="text-lg font-semibold">Beach Getaway</h4>
+                <h4 className="text-lg font-semibold">Nature Getaway</h4>
                 <p className="text-gray-600 text-sm">Relax on pristine beaches with all-inclusive luxury.</p>
               </div>
             </div>
@@ -83,7 +83,7 @@ const LandingPage = () => {
             <div className="flex items-center bg-gray-100 bg-opacity-50 p-4 rounded-lg shadow">
               <img src={Package3} alt="City Explorer" className="w-24 h-24 rounded-lg object-cover mr-4" />
               <div>
-                <h4 className="text-lg font-semibold">City Explorer</h4>
+                <h4 className="text-lg font-semibold">Landscape Explorer</h4>
                 <p className="text-gray-600 text-sm">Discover the best urban spots with expert guides.</p>
               </div>
             </div>

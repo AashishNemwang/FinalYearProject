@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Import Images
 import ChitwanImg from '../assets/Chitwan.jpg';
@@ -11,11 +11,9 @@ import Trending2 from '../assets/trending2.jpg';
 import Trending3 from '../assets/trending3.jpg';
 
 const TravHome = () => {
-  const [filters, setFilters] = useState({
-    destination: '',
-    date: '',
-    category: '',
-  });
+  const [filters, setFilters] = useState({ destination: '', date: '', category: '' });
+  const packagesSectionRef = useRef(null);
+  const navigate = useNavigate();
 
   const packages = [
     { id: 1, destination: 'Chitwan National Park', price: '$500', description: 'Explore the rich biodiversity with a 3-day jungle safari.', image: ChitwanImg },
@@ -33,17 +31,22 @@ const TravHome = () => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
+  const scrollToPackages = () => {
+    packagesSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div>
-      {/* Navbar (Now More Visible) */}
-      <nav className="fixed top-0 left-0 w-full bg-black bg-opacity-60 text-white py-4 shadow-md z-50">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 w-full bg-black bg-opacity-70 text-white py-4 shadow-md z-50">
         <div className="container mx-auto flex justify-between items-center px-6">
           <h1 className="text-2xl font-bold">TravelTorch</h1>
-          <div className="space-x-6 flex font-semibold text-lg">
-            <Link to="/" className="hover:text-gray-300">Home</Link>
-            <Link to="/packages" className="hover:text-gray-300">Packages</Link>
-            <Link to="/contact" className="hover:text-gray-300">Contact</Link>
-            <Link to="/login" className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">Login</Link>
+          <div className="space-x-4 flex font-semibold text-lg">
+            <button onClick={() => navigate('/')} className=" text-white px-4 py-2 rounded hover:bg-gray-600 ">Home</button>
+            <button onClick={scrollToPackages} className=" text-white px-4 py-2 rounded hover:bg-gray-600 ">Packages</button>
+            <button onClick={() => navigate('/contact')} className=" text-white px-4 py-2 rounded hover:bg-gray-600">Contact</button>
+            <Link to="/login" className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-white hover:text-gray-600
+            ">Login</Link>
           </div>
         </div>
       </nav>
@@ -63,22 +66,17 @@ const TravHome = () => {
               onChange={handleFilterChange} 
               className="border border-gray-500 p-3 rounded w-40 focus:ring-2 focus:ring-green-500 text-gray-900"
             />
-            <input 
-              type="date" 
-              name="date" 
-              onChange={handleFilterChange} 
-              className="border border-gray-300 p-3 rounded w-40 focus:ring-2 focus:ring-green-500 text-gray-900"
-            />
+            
             <select 
               name="category" 
               onChange={handleFilterChange} 
               className="border border-gray-300 p-3 rounded w-40 focus:ring-2 focus:ring-green-500 text-gray-900"
             >
               <option value="adventure">Adventure</option>
-              <option value="beach">Trek</option>
-              <option value="mountain">Mountain</option>
+              <option value="trek">Trek</option>
+              <option value="sight-seeing">Sight-seeing</option>
             </select>
-            <button className="bg-gray-600 text-white  px-6 py-3 rounded-xl hover:bg-gray-700">Search</button>
+            <button className="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-white hover:text-gray-600">Search</button>
           </div>
         </div>
       </section>
@@ -99,31 +97,37 @@ const TravHome = () => {
       </section>
 
       {/* Available Packages Section */}
-      <section className="container mx-auto py-10 px-4">
-        <h2 className="text-3xl font-bold text-center mb-6">Available Packages</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {packages.map((pkg) => (
-            <div key={pkg.id} className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow">
-              <img src={pkg.image} alt={pkg.destination} className="w-full h-48 object-cover"/>
-              <div className="p-4">
-                <h3 className="text-xl font-bold">{pkg.destination}</h3>
-                <p className="text-gray-700">{pkg.description}</p>
-                <p className="text-blue-600 font-bold mt-4">{pkg.price}</p>
-                <Link to={`/package/${pkg.id}`} className="block bg-blue-600 text-white text-center py-2 mt-4 rounded hover:bg-blue-700 transition">Book Now</Link>
-              </div>
-            </div>
-          ))}
+      <section ref={packagesSectionRef} className="container mx-auto py-10 px-4">
+  <h2 className="text-3xl font-bold text-center mb-6">Available Packages</h2>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {packages.map((pkg) => (
+      <div key={pkg.id} className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow">
+        <img src={pkg.image} alt={pkg.destination} className="w-full h-48 object-cover"/>
+        <div className="p-4">
+          <h3 className="text-xl font-bold">{pkg.destination}</h3>
+          <p className="text-gray-700">{pkg.description}</p>
+          <p className="text-gray-400 font-bold mt-4">{pkg.price}</p>
+          <Link 
+            to={`/package/${pkg.id}`} 
+            className="inline-block bg-gray-600 text-white text-center px-4 py-2 mt-4 rounded hover:bg-gray-200 hover:text-gray-700 transition"
+          >
+            Book Now
+          </Link>
         </div>
-      </section>
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-6 mt-10">
         <div className="container mx-auto text-center">
           <p>&copy; 2025 TravelTorch. All rights reserved.</p>
           <div className="flex justify-center space-x-6 mt-2">
-            <Link to="/" className="hover:text-gray-400">Home</Link>
-            <Link to="/packages" className="hover:text-gray-400">Packages</Link>
-            <Link to="/contact" className="hover:text-gray-400">Contact</Link>
+            <button onClick={() => navigate('/')} className="hover:text-gray-400">Home</button>
+            <button onClick={scrollToPackages} className="hover:text-gray-400">Packages</button>
+            <button onClick={() => navigate('/contact')} className="hover:text-gray-400">Contact</button>
             <Link to="/login" className="hover:text-gray-400">Login</Link>
           </div>
         </div>
